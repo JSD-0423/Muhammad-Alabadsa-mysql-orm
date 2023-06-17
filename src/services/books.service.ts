@@ -2,7 +2,6 @@ import httpStatus from "http-status";
 import { ApiError } from "../utils/apiError.js";
 import { __dirname } from "../app.js";
 import { IBook } from "../interfaces/book.js";
-import { FileUtils } from "../utils/files.js";
 import { BookModel } from "../models/books.model";
 import { DB } from "../databases/index.js";
 
@@ -13,9 +12,17 @@ export class BooksServices {
     this.books = books;
   }
 
-  async finAllBooks(): Promise<BookModel[]> {
-    const books: BookModel[] = await DB.Books.findAll();
-    console.log({ books });
+  async findAllBooks({
+    page = 0,
+    limit = 5,
+  }: {
+    page: number;
+    limit: number;
+  }): Promise<BookModel[]> {
+    const books: BookModel[] = await DB.Books.findAll({
+      offset: page,
+      limit,
+    });
     return books;
   }
 
@@ -30,7 +37,10 @@ export class BooksServices {
       where: { isbn: book.isbn },
     });
     if (existBook)
-      throw new ApiError(httpStatus.BAD_REQUEST, "Book already exist");
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        `Book with isbn ${book.isbn} is already existed`
+      );
     const createdBook: BookModel = await this.books.create(book);
     return createdBook;
   }
@@ -39,8 +49,7 @@ export class BooksServices {
     const existBook: BookModel | null = await this.books.findByPk(bookId);
     if (!existBook)
       throw new ApiError(httpStatus.NOT_FOUND, "Book doesn't exist");
-
-    await this.books.update({ ...book }, { where: { id: bookId } });
+    await this.books.update(book, { where: { id: bookId } });
 
     const updatedBook = (await this.books.findByPk(bookId)) as BookModel;
     return updatedBook;

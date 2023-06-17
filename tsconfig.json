@@ -101,7 +101,6 @@
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"],
       "@config": ["config/index.ts"],
       "@controllers/*": ["controllers/*"],
       "@databases": ["databases"],

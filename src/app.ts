@@ -25,7 +25,7 @@ app.set("views", path.resolve("./src/views"));
 // v1 api routes
 app.use("/api/v1", bookRoutes);
 
-DB.sequelize.sync();
+DB.sequelize.sync({ alter: true });
 
 // send back a 404 error for any unknown api request
 app.use((_req: Request, _res: Response<IResData>, next: NextFunction) => {

@@ -2,10 +2,7 @@ import { Sequelize, DataType, Model, Optional, DataTypes } from "sequelize";
 
 import { IBook } from "../interfaces/book";
 
-export type BookCreationAttributes = Optional<
-  IBook,
-  "id" | "isbn" | "title" | "subtitle" | "author" | "published"
->;
+export type BookCreationAttributes = Optional<IBook, "subtitle">;
 
 export class BookModel
   extends Model<IBook, BookCreationAttributes>
@@ -37,6 +34,7 @@ export default function (sequelize: Sequelize): typeof BookModel {
       title: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       subtitle: {
         type: DataTypes.STRING,

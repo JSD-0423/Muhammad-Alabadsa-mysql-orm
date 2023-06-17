@@ -2,6 +2,8 @@ import { Router } from "express";
 import { BooksControllers } from "../controllers/index.js";
 import {
   validateCreateBookBody,
+  validateUpdateBookBody,
+  validateGetBooks,
   validateId,
 } from "../middlewares/validation/validation.js";
 import { IBooksRoute } from "./types";
@@ -17,8 +19,11 @@ class BooksRoute implements IBooksRoute {
   }
 
   initializeRoutes() {
-    console.log("controllers");
-    this.router.get(`${this.path}`, this.bookControllers.getBooks);
+    this.router.get(
+      `${this.path}`,
+      validateGetBooks,
+      this.bookControllers.getBooks
+    );
     this.router.get(
       `${this.path}:id`,
       validateId,
@@ -32,7 +37,7 @@ class BooksRoute implements IBooksRoute {
     this.router.patch(
       `${this.path}:id`,
       validateId,
-      validateCreateBookBody,
+      validateUpdateBookBody,
       this.bookControllers.updateBook
     );
     this.router.delete(
