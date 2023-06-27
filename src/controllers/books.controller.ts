@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import { validationResult, Result } from "express-validator";
 
 import { BooksServices } from "../services";
-import { BookModel } from "../models/books.model.js";
+import { Book } from "../models/books.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { IResData } from "./types";
 
@@ -76,7 +76,7 @@ export class BooksControllers {
       if (result.array().length > 0) {
         throw new ApiError(httpStatus.BAD_REQUEST, result.array()[0]["msg"]);
       }
-      const createdBook: BookModel = await this.booksService.createNewBook(
+      const createdBook: Book = await this.booksService.createNewBook(
         bookData
       );
 
@@ -104,7 +104,7 @@ export class BooksControllers {
         throw new ApiError(httpStatus.BAD_REQUEST, result.array()[0]["msg"]);
       }
 
-      const updatedBook: BookModel = await this.booksService.updateBook(
+      const updatedBook: Book = await this.booksService.updateBook(
         +id,
         bookData
       );

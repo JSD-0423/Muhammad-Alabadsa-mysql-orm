@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+import Sequelize from "sequelize-typescript";
 import {
   NODE_ENV,
   DB_HOST,
@@ -7,23 +7,17 @@ import {
   DB_PASSWORD,
   DB_DATABASE,
 } from "../config/index.js";
-import BookModel from "../models/books.model.js";
+import { Book } from "../models/books.model.js";
+import { User } from "../models/users.model.js";
 
-const sequelize = new Sequelize.Sequelize(
-  DB_DATABASE as string,
-  DB_USER as string,
-  DB_PASSWORD as string,
-  {
-    dialect: "mysql",
-    host: DB_HOST,
-  }
-);
+const connection = new Sequelize.Sequelize({
+  database: DB_DATABASE,
+  username: DB_USER,
+  password: DB_PASSWORD,
+  dialect: "mysql",
+  host: DB_HOST,
+  models: [Book, User],
+});
 
-sequelize.authenticate();
-
-export const DB = {
-  Books: BookModel(sequelize),
-  sequelize,
-  Sequelize,
-};
+export default connection;
 

@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "experimentalDecorators": true,
+    "experimentalDecorators": true,
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

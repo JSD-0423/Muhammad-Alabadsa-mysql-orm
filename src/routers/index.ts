@@ -1,21 +1,23 @@
 import { Router } from "express";
-import fs from "fs/promises";
-import path from "path";
-import { DB } from "../databases/index.js";
 
-import { BooksControllers } from "../controllers/index.js";
+import { BooksControllers, UsersControllers } from "../controllers/index.js";
 import { BooksServices } from "../services/index.js";
-import { FileUtils } from "../utils/files.js";
+import { UsersServices } from "../services/index.js";
 import BooksRoute from "./books.route.js";
+import UsersRoute from "./users.route.js";
 
 const router = Router();
-const fileUtils = new FileUtils(fs, path);
-const bookServices = new BooksServices(DB.Books);
+const bookServices = new BooksServices();
 const bookControllers = new BooksControllers(bookServices);
 
-const booksRoute = new BooksRoute(bookControllers);
+const userServices = new UsersServices();
+const userControllers = new UsersControllers(userServices);
 
-router.use("/books", booksRoute.router);
+const usersRoute = new UsersRoute(userControllers).router;
+const booksRoute = new BooksRoute(bookControllers).router;
+
+router.use("/users", usersRoute);
+router.use("/books", booksRoute);
 
 export default router;
 

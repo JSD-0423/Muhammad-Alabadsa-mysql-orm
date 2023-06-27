@@ -7,3 +7,10 @@ export interface IBooksRoute {
   initializeRoutes: () => void;
 }
 
+export interface IUsersRoute {
+  path: string;
+  router: Router;
+  userControllers: UserController;
+  initializeRoutes: () => void;
+}
+
