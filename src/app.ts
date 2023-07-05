@@ -2,12 +2,14 @@ import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import httpStatus from "http-status";
-import passport from "passport";
+import passport, { DoneCallback } from "passport";
 import {
   Strategy as LocalStrategy,
   VerifyFunctionWithRequest,
 } from "passport-local";
-import { DoneCallback } from "passport";
+import { Strategy, ExtractJwt } from "passport-jwt";
+import { JwtPayload } from "jsonwebtoken";
+
 import session from "express-session";
 import FileStore from "session-file-store";
 
@@ -17,6 +19,7 @@ import { ApiError } from "./utils/apiError.js";
 import router from "./routers/index.js";
 import db from "./databases/index.js";
 import { User } from "./models/users.model.js";
+import { JWT_SECRET_KEY } from "./config/index.js";
 
 interface IResData {
   code: number;
@@ -40,7 +43,7 @@ app.use(
   })
 );
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -54,25 +57,19 @@ passport.deserializeUser(function (
 });
 
 passport.use(
-  new LocalStrategy(
+  new Strategy(
     {
-      usernameField: "email",
-      passwordField: "password",
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: JWT_SECRET_KEY,
     },
-    async function (email: any, password: any, done: any) {
+    async function (jwt_payload: JwtPayload, done) {
       try {
-        const user = await User.findOne({
-          where: { email: email },
-        });
-        if (!user) {
-          return done(null, false);
-        }
-        if (user.password !== password) {
-          return done(null, false);
-        }
-        return done(null, user);
-      } catch (err) {
-        return done(err);
+        const { sub } = jwt_payload;
+        const user = await User.findByPk(sub);
+
+        return done(user, true);
+      } catch (e) {
+        return done(e, false);
       }
     }
   )
