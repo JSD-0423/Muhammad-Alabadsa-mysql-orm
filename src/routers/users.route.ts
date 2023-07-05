@@ -23,14 +23,15 @@ class UsersRoute implements IUsersRoute {
     this.router.post(
       `${this.path}signin`,
       validateSigninBody,
-      passport.authenticate("local"),
+      // passport.authenticate("jwt", { session: false }),
       this.userControllers.signin
     );
     this.router.get(
       `${this.path}`,
-      passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/signin",
+      passport.authenticate("jwt", {
+        // successRedirect: "/",
+        // failureRedirect: "/signin",
+        session: false,
       }),
       this.userControllers.getAllUsers
     );

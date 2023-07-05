@@ -14,3 +14,10 @@ export interface IUsersRoute {
   initializeRoutes: () => void;
 }
 
+export interface IRentRoute {
+  path: string;
+  router: Router;
+  rentControllers: RentController;
+  initializeRoutes: () => void;
+}
+
