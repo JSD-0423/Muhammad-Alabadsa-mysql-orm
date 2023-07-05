@@ -19,10 +19,12 @@ export const {
   LOG_FORMAT,
   LOG_DIR,
   ORIGIN,
+  JWT_SECRET_KEY,
 } = process.env;
 
 export default {
   host: "localhost",
   port: process.env.PORT || 3000,
+  JWT_SECRET_KEY,
 };
 
