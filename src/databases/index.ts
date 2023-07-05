@@ -9,6 +9,7 @@ import {
 } from "../config/index.js";
 import { Book } from "../models/books.model.js";
 import { User } from "../models/users.model.js";
+import { Rent } from "../models/rent.model.js";
 
 const connection = new Sequelize.Sequelize({
   database: DB_DATABASE,
@@ -16,7 +17,7 @@ const connection = new Sequelize.Sequelize({
   password: DB_PASSWORD,
   dialect: "mysql",
   host: DB_HOST,
-  models: [Book, User],
+  models: [Book, User, Rent],
 });
 
 export default connection;
