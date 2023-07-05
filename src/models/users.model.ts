@@ -1,4 +1,14 @@
-import { Model, Column, DataType, Table } from "sequelize-typescript";
+import {
+  Model,
+  Column,
+  DataType,
+  Table,
+  BeforeCreate,
+  BelongsToMany,
+} from "sequelize-typescript";
+import { Book } from "./books.model.js";
+import { Rent } from "./rent.model.js";
+import { hashPassword } from "../utils/hashPassword.js";
 
 @Table({
   timestamps: false,
@@ -21,5 +31,14 @@ export class User extends Model {
     allowNull: false,
   })
   password!: string;
+
+  @BelongsToMany(() => Book, () => Rent)
+  books!: Book[];
+
+  @BeforeCreate
+  static hashPassword(user: User) {
+    const hash = hashPassword(user.password);
+    user.password = hash;
+  }
 }
 
